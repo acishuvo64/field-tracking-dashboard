@@ -9,6 +9,8 @@ import plotly.express as px
 import folium
 from folium.plugins import MarkerCluster
 from streamlit_folium import st_folium
+import base64
+from pathlib import Path
 
 # =========================================================
 # PAGE CONFIG
@@ -19,6 +21,19 @@ st.set_page_config(
     page_icon="📍",
     layout="wide"
 )
+
+# =========================================================
+# LOGO HELPER
+# =========================================================
+
+
+def img_to_base64(path):
+    with open(path, "rb") as f:
+        return base64.b64encode(f.read()).decode()
+
+
+premio_b64 = img_to_base64("ACI_Premio_Plastics_Ltd_.jpg")
+aci_b64 = img_to_base64("ACI.png")
 
 # =========================================================
 # CUSTOM CSS
@@ -45,93 +60,104 @@ st.markdown("""
 
 .kpi-blue {
     background: linear-gradient(135deg, #4F46E5, #818CF8);
-    padding: 22px 10px;
-    border-radius: 16px;
-    color: white;
-    text-align: center;
-    box-shadow: 0 6px 18px rgba(79,70,229,0.35);
+    padding: 22px 10px; border-radius: 16px; color: white;
+    text-align: center; box-shadow: 0 6px 18px rgba(79,70,229,0.35);
     min-height: 115px;
 }
 .kpi-green {
     background: linear-gradient(135deg, #059669, #34D399);
-    padding: 22px 10px;
-    border-radius: 16px;
-    color: white;
-    text-align: center;
-    box-shadow: 0 6px 18px rgba(5,150,105,0.35);
+    padding: 22px 10px; border-radius: 16px; color: white;
+    text-align: center; box-shadow: 0 6px 18px rgba(5,150,105,0.35);
     min-height: 115px;
 }
 .kpi-cyan {
     background: linear-gradient(135deg, #0284C7, #38BDF8);
-    padding: 22px 10px;
-    border-radius: 16px;
-    color: white;
-    text-align: center;
-    box-shadow: 0 6px 18px rgba(2,132,199,0.35);
+    padding: 22px 10px; border-radius: 16px; color: white;
+    text-align: center; box-shadow: 0 6px 18px rgba(2,132,199,0.35);
     min-height: 115px;
 }
 .kpi-orange {
     background: linear-gradient(135deg, #D97706, #FCD34D);
-    padding: 22px 10px;
-    border-radius: 16px;
-    color: white;
-    text-align: center;
-    box-shadow: 0 6px 18px rgba(217,119,6,0.35);
+    padding: 22px 10px; border-radius: 16px; color: white;
+    text-align: center; box-shadow: 0 6px 18px rgba(217,119,6,0.35);
     min-height: 115px;
 }
 .kpi-pink {
     background: linear-gradient(135deg, #DB2777, #F9A8D4);
-    padding: 22px 10px;
-    border-radius: 16px;
-    color: white;
-    text-align: center;
-    box-shadow: 0 6px 18px rgba(219,39,119,0.35);
+    padding: 22px 10px; border-radius: 16px; color: white;
+    text-align: center; box-shadow: 0 6px 18px rgba(219,39,119,0.35);
     min-height: 115px;
 }
 .kpi-blue h4, .kpi-green h4, .kpi-cyan h4,
 .kpi-orange h4, .kpi-pink h4 {
-    margin: 0 0 8px 0;
-    font-size: 13px;
-    font-weight: 600;
-    opacity: 0.9;
+    margin: 0 0 8px 0; font-size: 13px; font-weight: 600; opacity: 0.9;
 }
 .kpi-blue h2, .kpi-green h2, .kpi-cyan h2,
 .kpi-orange h2, .kpi-pink h2 {
-    margin: 0;
-    font-size: 30px;
-    font-weight: 900;
+    margin: 0; font-size: 30px; font-weight: 900;
 }
 
 .photo-card {
     background: linear-gradient(135deg, #1E293B, #334155);
-    border-radius: 16px;
-    padding: 20px;
-    text-align: center;
-    color: white;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    border-radius: 16px; padding: 20px; text-align: center;
+    color: white; box-shadow: 0 6px 20px rgba(0,0,0,0.3);
 }
 
+/* ── Sidebar dark theme ── */
 [data-testid="stSidebar"] {
-    background: #0F172A;
+    background: #0F172A !important;
 }
 [data-testid="stSidebar"] label,
 [data-testid="stSidebar"] p,
-[data-testid="stSidebar"] span {
+[data-testid="stSidebar"] span,
+[data-testid="stSidebar"] div {
     color: white !important;
     font-weight: 600;
+}
+
+/* sidebar logo area */
+.sidebar-logo-box {
+    background: white;
+    border-radius: 12px;
+    padding: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+.sidebar-aci-box {
+    text-align: center;
+    margin-bottom: 18px;
+}
+
+/* header logo */
+.header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 4px;
 }
 
 </style>
 """, unsafe_allow_html=True)
 
 # =========================================================
-# HEADER
+# SIDEBAR LOGOS
 # =========================================================
 
-st.markdown('<p class="main-title">📍 AI Field Force Tracking Dashboard</p>',
-            unsafe_allow_html=True)
-st.markdown('<p class="sub-title">ACI Premio Plastics — Professional Employee Tracking & Productivity Analytics</p>', unsafe_allow_html=True)
-st.markdown("---")
+st.sidebar.markdown(
+    f"""
+    <div class="sidebar-logo-box">
+        <img src="data:image/jpeg;base64,{premio_b64}"
+             style="width:100%;max-width:200px;height:auto;border-radius:8px;">
+    </div>
+    <div class="sidebar-aci-box">
+        <img src="data:image/png;base64,{aci_b64}"
+             style="width:64px;height:64px;border-radius:50%;border:3px solid #10B981;">
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+st.sidebar.title("🎛 Dashboard Filters")
 
 # =========================================================
 # LOAD DATA
@@ -146,13 +172,10 @@ def load_data():
         "super_tracking_report.xlsx", sheet_name="Image_URL")
     raw_df = pd.read_excel("super_tracking_report.xlsx",
                            sheet_name="Overall _Raw_data")
-
-    summary["Date"] = pd.to_datetime(summary["Date"],  errors="coerce")
-    raw_df["Date"] = pd.to_datetime(raw_df["Date"],   errors="coerce")
-
+    summary["Date"] = pd.to_datetime(summary["Date"], errors="coerce")
+    raw_df["Date"] = pd.to_datetime(raw_df["Date"],  errors="coerce")
     raw_df["Latitude"] = pd.to_numeric(raw_df["Latitude"],  errors="coerce")
     raw_df["Longitude"] = pd.to_numeric(raw_df["Longitude"], errors="coerce")
-
     return summary, image_df, raw_df
 
 
@@ -168,24 +191,48 @@ image_dict = dict(zip(image_df["Employee Name"], image_df["Image"]))
 # SIDEBAR FILTERS
 # =========================================================
 
-st.sidebar.title("🎛 Dashboard Filters")
-
-start_date = st.sidebar.date_input("Start Date", summary_df["Date"].min())
-end_date = st.sidebar.date_input("End Date",   summary_df["Date"].max())
+start_date = st.sidebar.date_input("📅 Start Date", summary_df["Date"].min())
+end_date = st.sidebar.date_input("📅 End Date",   summary_df["Date"].max())
 
 group_list = sorted(summary_df["Group"].dropna().unique())
-selected_group = st.sidebar.selectbox("Select Group", ["All"] + group_list)
+selected_group = st.sidebar.selectbox("🏷 Select Group", ["All"] + group_list)
 
 deg_list = sorted(summary_df["Deg"].dropna().unique())
 selected_deg = st.sidebar.selectbox(
-    "Select Designation (RSM/TSM)", ["All"] + deg_list)
+    "👔 Select Designation (RSM/TSM)", ["All"] + deg_list)
 
 employee_list = sorted(summary_df["Employee Name"].dropna().unique())
 selected_employee = st.sidebar.selectbox(
-    "Select Employee", ["All"] + employee_list)
+    "👤 Select Employee", ["All"] + employee_list)
 
 # =========================================================
-# FILTER SUMMARY DATA
+# HEADER — ACI Logo + Title
+# =========================================================
+
+h_left, h_right = st.columns([5, 1])
+
+with h_left:
+    st.markdown('<p class="main-title">📍 AI Field Force Tracking Dashboard</p>',
+                unsafe_allow_html=True)
+    st.markdown('<p class="sub-title">ACI Premio Plastics — Professional Employee Tracking & Productivity Analytics</p>', unsafe_allow_html=True)
+
+with h_right:
+    st.markdown(
+        f"""
+        <div style="text-align:right; padding-top:6px;">
+            <img src="data:image/png;base64,{aci_b64}"
+                 style="width:72px;height:72px;border-radius:50%;
+                        border:3px solid #10B981;
+                        box-shadow:0 4px 12px rgba(0,0,0,0.2);">
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+st.markdown("---")
+
+# =========================================================
+# FILTER DATA
 # =========================================================
 
 df = summary_df.copy()
@@ -246,7 +293,12 @@ with photo_col:
         deg_val = emp_info["Deg"].iloc[0] if not emp_info.empty else "-"
         group_val = emp_info["Group"].iloc[0] if not emp_info.empty else "-"
 
-        photo_html = f'<img src="{img_url}" width="150" height="150" style="border-radius:50%;object-fit:cover;border:4px solid #6366F1;margin-bottom:10px;" onerror="this.style.display=\'none\'">' if img_url else '<div style="font-size:64px;margin-bottom:10px;">👤</div>'
+        photo_html = (
+            f'<img src="{img_url}" width="150" height="150" '
+            f'style="border-radius:50%;object-fit:cover;border:4px solid #6366F1;margin-bottom:10px;" '
+            f'onerror="this.style.display=\'none\'">'
+            if img_url else '<div style="font-size:64px;margin-bottom:10px;">👤</div>'
+        )
 
         st.markdown(f"""
         <div class="photo-card">
@@ -268,7 +320,7 @@ with info_col:
         ei = df[df["Employee Name"] == selected_employee]
         mc1, mc2, mc3, mc4, mc5 = st.columns(5)
         with mc1:
-            st.metric("📅 Working Days",    ei["Date"].nunique())
+            st.metric("📅 Working Days",   ei["Date"].nunique())
         with mc2:
             st.metric("⏱ Working Hr",  round(ei["Total Working Hr"].sum(), 1))
         with mc3:
@@ -365,8 +417,11 @@ fig_deg = px.bar(
     color_discrete_map={"RSM": "#4F46E5", "TSM": "#06B6D4"},
     title="Productivity % by Employee — RSM vs TSM"
 )
-fig_deg.update_layout(yaxis_title="Productivity %",
-                      xaxis_tickangle=-45, legend_title="Designation")
+fig_deg.update_layout(
+    yaxis_title="Productivity %",
+    xaxis_tickangle=-45,
+    legend_title="Designation"
+)
 st.plotly_chart(fig_deg, use_container_width=True)
 
 st.markdown("---")
@@ -395,8 +450,11 @@ fig_top = px.bar(
     color_continuous_scale="Viridis",
     title="Top 10 Performers by Productivity %"
 )
-fig_top.update_layout(xaxis_title="Productivity %",
-                      yaxis_title="", coloraxis_showscale=False)
+fig_top.update_layout(
+    xaxis_title="Productivity %",
+    yaxis_title="",
+    coloraxis_showscale=False
+)
 st.plotly_chart(fig_top, use_container_width=True)
 
 st.markdown("---")
@@ -425,8 +483,11 @@ fig_bot = px.bar(
     color_continuous_scale="Reds_r",
     title="Bottom 10 Performers by Productivity %"
 )
-fig_bot.update_layout(xaxis_title="Productivity %",
-                      yaxis_title="", coloraxis_showscale=False)
+fig_bot.update_layout(
+    xaxis_title="Productivity %",
+    yaxis_title="",
+    coloraxis_showscale=False
+)
 st.plotly_chart(fig_bot, use_container_width=True)
 
 st.markdown("---")
@@ -479,7 +540,7 @@ st.plotly_chart(fig_cmp, use_container_width=True)
 st.markdown("---")
 
 # =========================================================
-# SECTION 8: GPS MAP (Overall Raw Data — Lat/Lon আলাদা)
+# SECTION 8: GPS ROUTE MAP
 # =========================================================
 
 st.subheader("🗺 Employee GPS Route Map")
@@ -493,12 +554,12 @@ if selected_employee != "All":
     ].dropna(subset=["Latitude", "Longitude"]).copy()
 
     if map_src.empty:
-        st.warning("No GPS data found for this employee in selected date range.")
+        st.warning(
+            "No GPS data found for this employee in the selected date range.")
     else:
-        # Date filter for map
         map_dates = sorted(map_src["Date"].dt.date.unique())
         selected_map_date = st.selectbox(
-            "📅 Select Date for GPS Map (or see All)",
+            "📅 Select Date for GPS Map",
             ["All Dates"] + [str(d) for d in map_dates],
             key="map_date"
         )
@@ -515,22 +576,17 @@ if selected_employee != "All":
 
             m = folium.Map(location=[center_lat, center_lon], zoom_start=12)
 
-            # Color by status
-            status_color = {"Travelling": "blue", "Idling / Stop": "red"}
-
-            # Draw route line
+            # Route line
             coords = list(zip(map_src["Latitude"], map_src["Longitude"]))
             if len(coords) > 1:
                 folium.PolyLine(
-                    coords,
-                    color="#6366F1",
-                    weight=3,
-                    opacity=0.7,
-                    tooltip="Route"
+                    coords, color="#6366F1",
+                    weight=3, opacity=0.7, tooltip="Route"
                 ).add_to(m)
 
-            # Marker cluster for points
+            # Clustered markers
             cluster = MarkerCluster().add_to(m)
+            status_color = {"Travelling": "blue", "Idling / Stop": "red"}
 
             for _, row in map_src.iterrows():
                 color = status_color.get(row["Status"], "gray")
@@ -538,41 +594,34 @@ if selected_employee != "All":
                 popup = f"""
                 <b>{row['Employee Name']}</b><br>
                 📅 {row['Date'].date()}<br>
-                🕐 {str(row.get('Start Time',''))[:8] if 'Start Time' in row else ''}<br>
-                📍 {addr[:60] if addr else 'N/A'}<br>
+                📍 {addr[:70] if addr else 'N/A'}<br>
                 🔵 Status: {row['Status']}
                 """
                 folium.CircleMarker(
                     location=[row["Latitude"], row["Longitude"]],
-                    radius=5,
-                    color=color,
-                    fill=True,
-                    fill_color=color,
-                    fill_opacity=0.8,
-                    popup=folium.Popup(popup, max_width=250),
+                    radius=5, color=color, fill=True,
+                    fill_color=color, fill_opacity=0.8,
+                    popup=folium.Popup(popup, max_width=260),
                     tooltip=row["Status"]
                 ).add_to(cluster)
 
             # Start & End markers
-            first = map_src.iloc[0]
-            last = map_src.iloc[-1]
-
             folium.Marker(
-                [first["Latitude"], first["Longitude"]],
-                popup="🟢 Start",
-                tooltip="Start Point",
+                [map_src.iloc[0]["Latitude"], map_src.iloc[0]["Longitude"]],
+                popup="🟢 Start Point",
+                tooltip="Start",
                 icon=folium.Icon(color="green", icon="play")
             ).add_to(m)
 
             folium.Marker(
-                [last["Latitude"], last["Longitude"]],
-                popup="🔴 End",
-                tooltip="End Point",
+                [map_src.iloc[-1]["Latitude"], map_src.iloc[-1]["Longitude"]],
+                popup="🔴 End Point",
+                tooltip="End",
                 icon=folium.Icon(color="red", icon="stop")
             ).add_to(m)
 
             # Legend
-            legend_html = """
+            m.get_root().html.add_child(folium.Element("""
             <div style="position:fixed;bottom:30px;left:30px;z-index:1000;
                         background:white;padding:12px 16px;border-radius:10px;
                         box-shadow:0 2px 10px rgba(0,0,0,0.3);font-size:13px;">
@@ -582,8 +631,7 @@ if selected_employee != "All":
                 <span style="color:green;">▶</span> Start Point<br>
                 <span style="color:red;">■</span> End Point
             </div>
-            """
-            m.get_root().html.add_child(folium.Element(legend_html))
+            """))
 
             total_pts = len(map_src)
             travel_pts = len(map_src[map_src["Status"] == "Travelling"])
@@ -647,5 +695,29 @@ display_df = display_df.rename(columns={"Work productivity": "Productivity %"})
 st.dataframe(display_df, use_container_width=True)
 
 csv = df.to_csv(index=False).encode("utf-8")
-st.download_button("⬇ Download Filtered Report (CSV)", csv,
-                   "field_force_report.csv", "text/csv")
+st.download_button(
+    "⬇ Download Filtered Report (CSV)",
+    csv,
+    "field_force_report.csv",
+    "text/csv"
+)
+
+# =========================================================
+# FOOTER
+# =========================================================
+
+st.markdown("<br>", unsafe_allow_html=True)
+st.markdown(
+    f"""
+    <div style="text-align:center; padding:20px 0 10px 0; opacity:0.6;">
+        <img src="data:image/jpeg;base64,{premio_b64}"
+             style="height:40px; margin-right:16px; vertical-align:middle; border-radius:4px;">
+        <img src="data:image/png;base64,{aci_b64}"
+             style="height:40px; vertical-align:middle; border-radius:50%;">
+        <p style="font-size:12px; margin-top:8px; color:#64748B;">
+            © ACI Premio Plastics Ltd. | AI Field Force Dashboard
+        </p>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
