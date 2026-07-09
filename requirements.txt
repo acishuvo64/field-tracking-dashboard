@@ -1,0 +1,10 @@
+streamlit
+pandas
+geopy
+openpyxl
+numpy
+matplotlib
+pydeck
+plotly
+folium
+streamlit-folium
